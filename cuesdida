@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cuestionario de Ansiedad en el Aula de Idioma Extranjero</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h1 { text-align: center; }
+    .pregunta { margin-bottom: 10px; }
+    .opciones { margin-left: 20px; }
+    .btn { margin-top: 20px; padding: 10px 20px; font-size: 16px; }
+    canvas { margin-top: 40px; }
+  </style>
+</head>
+<body>
+  <h1>Cuestionario de Ansiedad en el Aula de Idioma Extranjero</h1>
+  <form id="cuestionario">
+    <div id="preguntas"></div>
+    <button type="button" class="btn" onclick="procesarRespuestas()">Enviar y Ver Resultados</button>
+  </form>
+
+  <canvas id="graficoResultados" width="800" height="400"></canvas>
+
+  <script>
+    const preguntas = [
+      "Nunca estoy completamente seguro de mí mismo cuando hablo en la clase de idioma extranjero.",
+      "No me preocupa cometer errores en clase.",
+      "Tiemblo cuando sé que me van a preguntar en clase.",
+      "Me asusta no entender lo que el profesor está diciendo en idioma extranjero.",
+      "No me molestaría en absoluto asistir a más clases de idioma extranjero.",
+      "Durante la clase, me doy cuenta pienso en cosas que no tienen nada que ver con la clase.",
+      "Pienso que a los otros compañeros se les dan mejor los idiomas que a mí.",
+      "Normalmente estoy a gusto cuando hago exámenes en clase.",
+      "Me pongo muy nervioso cuando tengo que hablar en clase y no me he preparado bien.",
+      "Me preocupa las consecuencias que pueda traer el suspender.",
+      "No entiendo por qué alguna gente se siente tan mal por las clases de idioma extranjero.",
+      "En clase, me pongo tan nervioso que se me olvidan algunas cosas que sé.",
+      "Me da corte salir voluntario en clase.",
+      "Creo que no me pondría nervioso si hablara el idioma extranjero con una persona nativa.",
+      "Me irrita no entender lo que el profesor está corrigiendo.",
+      "Aunque vaya con la clase preparada, me siento nervioso.",
+      "A menudo no me apetece ir a clase.",
+      "Me siento seguro a la hora de hablar en la clase.",
+      "Me da miedo que mi profesor corrija cada fallo que cometo.",
+      "Siento cómo mi corazón palpita cuando sé que me van a pedir que intervenga en clase.",
+      "Cuanto más estudio, más me lío.",
+      "No tengo ninguna presión ni preocupaciones para prepararme bien las clases.",
+      "Tengo la sensación de que mis compañeros hablan el idioma extranjero mejor que yo.",
+      "Me da mucho corte hablar en la lengua extranjera delante de mis compañeros.",
+      "Las clases transcurren con tal rapidez que me preocupa quedarme atrasado.",
+      "Comparativamente, estoy más tenso y me siento más nervioso en la clase de idioma extranjero que en otras clases o que en mi propio trabajo.",
+      "Me pongo nervioso mientras hablo en clase.",
+      "Antes de entrar a clase, me siento seguro y relajado.",
+      "Me pongo nervioso cuando no entiendo cada una de las palabras que mi profesor dice.",
+      "Me abruma la cantidad de cosas que hay que aprender para poder hablar otro idioma.",
+      "Temo que mis compañeros de clase se rían de mí cuando hablo en otro idioma.",
+      "Creo que me sentiría a gusto hablando entre nativos que hablan el idioma que estudio.",
+      "Me pongo nervioso cuando el profesor pregunta cosas que no me he podido preparar."
+    ];
+
+    const respuestas = ["Totalmente de acuerdo", "De acuerdo", "No sé", "En desacuerdo", "Totalmente en desacuerdo"];
+
+    const contenedor = document.getElementById("preguntas");
+    preguntas.forEach((texto, i) => {
+      const div = document.createElement("div");
+      div.className = "pregunta";
+      div.innerHTML = `<strong>${i + 1}. ${texto}</strong><br>` +
+        respuestas.map((r, j) => `
+          <label class="opciones">
+            <input type="radio" name="p${i}" value="${j + 1}"> ${r}
+          </label>`).join("<br>");
+      contenedor.appendChild(div);
+    });
+
+    function procesarRespuestas() {
+      const resultados = new Array(5).fill(0);
+      for (let i = 0; i < preguntas.length; i++) {
+        const seleccion = document.querySelector(`input[name='p${i}']:checked`);
+        if (seleccion) resultados[parseInt(seleccion.value) - 1]++;
+      }
+
+      const ctx = document.getElementById('graficoResultados').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: respuestas,
+          datasets: [{
+            label: 'Frecuencia de respuestas',
+            data: resultados,
+            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+    }
+  </script>
+</body>
+</html>
